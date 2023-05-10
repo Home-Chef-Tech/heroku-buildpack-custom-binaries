@@ -54,10 +54,21 @@ class CustomBinaries
     end
 
     manifest.each do |bin_name, url|
-      pid = Process.spawn(
-        "curl -L --silent #{ url } | " \
-        "tar x -z -C #{ @install_dir } --transform=s/.*/#{ bin_name }/"
-      )
+      # use unzip if zip file detected
+      zip = File.extname(URI.parse(url).path) == '.zip'
+
+      if zip
+        pid = Process.spawn(
+          "curl -L --silent #{ url } | " \
+          "unzip -q -d #{ @install_dir }"
+        )
+      else
+        pid = Process.spawn(
+          "curl -L --silent #{ url } | " \
+          "tar x -z -C #{ @install_dir } --transform=s/.*/#{ bin_name }/"
+        )
+      end
+
       processes[pid] = bin_name
       puts "       Downloading and Extracting #{ bin_name } from #{ url }..."
     end
