@@ -1,7 +1,9 @@
 # Heroku Buildpack for Custom Binaries
 
 This is a [Heroku buildpack](http://devcenter.heroku.com/articles/buildpacks)
-for adding pre-compiled custom binaries into your project.
+for adding pre-compiled custom binaries into your project. This can be useful for
+including CLI libraries from third parties that lack a gem/package/etc for your language
+or Heroku stack.
 
 ## Usage
 
@@ -32,15 +34,14 @@ deployed.
 
 ## Sounds great! But how do I build a binary that works with Heroku?
 
-Great news! All Heroku projects use Heroku's
-[Cedar-14 stack on Ubuntu 14.04 LTS](https://devcenter.heroku.com/articles/cedar-ubuntu-packages)
-so you have to do is compile your binary on a similar environment, compress it
+Heroku uses stacks based on Ubuntu LTS versions that can be downloaded as docker images.
+So all you have to do is compile your binary on a similar environment, compress it
 into a gzipped tarball, then host it somewhere it's available via url.
 
 ### Compile your binary for Heroku
 
 The simplest way to do this is to compile from source on either a fresh Heroku
-project or using the Heroku's Cedar-14 docker image.
+project or using the Heroku's Docker-20 docker image.
 
 #### Using Heroku
 
@@ -53,12 +54,12 @@ heroku run bash --app that-projects-name
 
 Then you can build from source and transfer it locally using `git` or `scp`.
 
-#### Docker Cedar-14 Image
+#### Docker Heroku-20 Image
 
-You can also use Heroku's official Cedar-14 image:
+You can also use Heroku's official Heroku-20 image:
 
 ``` bash
-docker run -it heroku/cedar:14 bash
+docker run -it heroku/heroku:20-build bash
 ```
 
 This has the additional convenience of being able transfer your binary to a
