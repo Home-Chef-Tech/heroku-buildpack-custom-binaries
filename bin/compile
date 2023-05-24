@@ -42,7 +42,7 @@ class DownloadedBinaries
   end
 
   def install_manifest
-    puts "-----> Installing custom binaries manifest"
+    puts "-----> Installing downloaded binaries manifest"
 
     processes = {}
 
