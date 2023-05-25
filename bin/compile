@@ -56,12 +56,19 @@ class DownloadedBinaries
 
     manifest.each do |bin_name, url|
       # use unzip if zip file detected
-      zip = File.extname(URI.parse(url).path) == '.zip'
+      uri_path = URI.parse(url).path
+      zip = File.extname(uri_path) == '.zip'
 
       if zip
+        filename = File.basename(uri_path)
+        temp_file = Tempfile.new(filename)
         pid = Process.spawn(
-          "curl -L --silent #{ url } | " \
-          "unzip -q -d #{ @install_dir }"
+          "curl -L --silent #{ url } --output #{temp_file.path}"
+        )
+        Process.wait pid
+
+        pid = Process.spawn(
+          "unzip #{filename} -q -d #{ @install_dir }"
         )
       else
         pid = Process.spawn(
