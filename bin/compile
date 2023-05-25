@@ -62,6 +62,7 @@ class DownloadedBinaries
       if zip
         filename = File.basename(uri_path)
         temp_file = Tempfile.new(filename)
+        temp_file.close
         pid = Process.spawn(
           "curl -L --silent #{ url } --output #{temp_file.path}"
         )
