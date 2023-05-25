@@ -4,6 +4,7 @@
 require "yaml"
 require "pathname"
 require "uri"
+require "tempfile"
 
 class DownloadedBinaries
   attr_reader :install_dir, :manifest_path, :profile_path, :manifest
