@@ -4,6 +4,7 @@
 require "yaml"
 require "pathname"
 require "uri"
+require "open-uri"
 require "tempfile"
 
 class DownloadedBinaries
@@ -62,15 +63,13 @@ class DownloadedBinaries
 
       if zip
         filename = File.basename(uri_path)
-        temp_file = Tempfile.new(filename)
+
+        temp_file = Tempfile.new(filename, binmode: true)
+        temp_file.write(URI.open(URI.parse(url)).read)
         temp_file.close
-        pid = Process.spawn(
-          "curl -L --silent #{ url } --output #{temp_file.path}"
-        )
-        Process.wait pid
 
         pid = Process.spawn(
-          "unzip #{filename} -q -d #{ @install_dir }"
+          "unzip  -q #{temp_file.path} -d #{ @install_dir }"
         )
       else
         pid = Process.spawn(
